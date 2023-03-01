@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin/binding"
 	"github.com/kingwel-xie/k2/common/api"
 	svc "github.com/kingwel-xie/k2/common/service"
-	"admin/models"
+	//"admin/models"
 	"admin/service"
 	"admin/service/dto"
 )
@@ -27,10 +27,10 @@ func (e TbxMisc) GetAll(c *gin.Context) {
 	e.MakeContext(c).MakeService(&svc)
 
 	// FIXME
-	data := backlog.LoadAllDict()
+	//data := backlog.LoadAllDict()
 
 	// we don't want to leak sysUser
-	delete(data, "userList")
+	// delete(data, "userList")
 
 	//var count int64
 	//var data = make(map[string]interface{})
@@ -48,7 +48,7 @@ func (e TbxMisc) GetAll(c *gin.Context) {
 	//}
 	//data["systemList"] = systemList
 
-	e.OK(data, "成功")
+	e.OK(nil, "成功")
 }
 
 // LimitedDownload 受限下载

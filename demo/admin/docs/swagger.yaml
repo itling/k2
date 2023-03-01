@@ -264,9 +264,6 @@ definitions:
         items:
           type: integer
         type: array
-      breadcrumb:
-        description: 是否面包屑
-        type: string
       component:
         description: 组件
         type: string
@@ -303,10 +300,6 @@ definitions:
       sort:
         description: 排序
         type: integer
-      sysApi:
-        items:
-          $ref: '#/definitions/models.SysApi'
-        type: array
       title:
         description: 显示名称
         type: string
@@ -323,9 +316,6 @@ definitions:
         items:
           type: integer
         type: array
-      breadcrumb:
-        description: 是否面包屑
-        type: string
       component:
         description: 组件
         type: string
@@ -362,10 +352,6 @@ definitions:
       sort:
         description: 排序
         type: integer
-      sysApi:
-        items:
-          $ref: '#/definitions/models.SysApi'
-        type: array
       title:
         description: 显示名称
         type: string
@@ -426,8 +412,6 @@ definitions:
     type: object
   dto.SysRoleInsertReq:
     properties:
-      admin:
-        type: boolean
       dataScope:
         type: string
       deptIds:
@@ -470,8 +454,6 @@ definitions:
     type: object
   dto.SysRoleUpdateReq:
     properties:
-      admin:
-        type: boolean
       dataScope:
         type: string
       deptIds:
@@ -572,43 +554,6 @@ definitions:
       username:
         type: string
     type: object
-  dto.TbxCountryDeleteReq:
-    properties:
-      ids:
-        items:
-          type: string
-        type: array
-    type: object
-  dto.TbxCountryInsertReq:
-    properties:
-      cName:
-        type: string
-      code:
-        type: string
-      code2:
-        type: string
-      code3:
-        type: string
-      eName:
-        type: string
-      eName2:
-        type: string
-    type: object
-  dto.TbxCountryUpdateReq:
-    properties:
-      cName:
-        type: string
-      code:
-        type: string
-      code2:
-        type: string
-      code3:
-        type: string
-      eName:
-        type: string
-      eName2:
-        type: string
-    type: object
   dto.UpdateStatusReq:
     properties:
       roleId:
@@ -642,12 +587,27 @@ definitions:
     - username
     - uuid
     type: object
+  middleware.PresignTokenRequest:
+    properties:
+      directory:
+        type: string
+      duration:
+        type: integer
+      filename:
+        type: string
+    type: object
+  middleware.PresignTokenResponse:
+    properties:
+      token: {}
+      vendor:
+        type: string
+    type: object
   models.SysApi:
     properties:
       action:
         type: string
       createBy:
-        type: integer
+        type: string
       createdAt:
         type: string
       handle:
@@ -661,7 +621,7 @@ definitions:
       type:
         type: string
       updateBy:
-        type: integer
+        type: string
       updatedAt:
         type: string
     type: object
@@ -676,7 +636,7 @@ definitions:
       configValue:
         type: string
       createBy:
-        type: integer
+        type: string
       createdAt:
         type: string
       id:
@@ -686,7 +646,7 @@ definitions:
       remark:
         type: string
       updateBy:
-        type: integer
+        type: string
       updatedAt:
         type: string
     type: object
@@ -697,7 +657,7 @@ definitions:
           $ref: '#/definitions/models.SysDept'
         type: array
       createBy:
-        type: integer
+        type: string
       createdAt:
         type: string
       dataScope:
@@ -731,7 +691,7 @@ definitions:
         description: 状态
         type: integer
       updateBy:
-        type: integer
+        type: string
       updatedAt:
         type: string
     type: object
@@ -743,8 +703,6 @@ definitions:
         items:
           type: integer
         type: array
-      breadcrumb:
-        type: string
       children:
         items:
           $ref: '#/definitions/models.SysMenu'
@@ -752,13 +710,13 @@ definitions:
       component:
         type: string
       createBy:
-        type: integer
+        type: string
       createdAt:
         type: string
       icon:
         type: string
-      is_select:
-        type: boolean
+      iconAntd:
+        type: string
       isFrame:
         type: string
       menuId:
@@ -769,8 +727,6 @@ definitions:
         type: string
       noCache:
         type: boolean
-      params:
-        type: string
       parentId:
         type: integer
       path:
@@ -790,33 +746,10 @@ definitions:
       title:
         type: string
       updateBy:
-        type: integer
+        type: string
       updatedAt:
         type: string
       visible:
-        type: string
-    type: object
-  models.TbxCountry:
-    properties:
-      cName:
-        type: string
-      code:
-        type: string
-      code2:
-        type: string
-      code3:
-        type: string
-      createBy:
-        type: integer
-      createdAt:
-        type: string
-      eName:
-        type: string
-      eName2:
-        type: string
-      updateBy:
-        type: integer
-      updatedAt:
         type: string
     type: object
   response.Page:
@@ -843,14 +776,27 @@ definitions:
 info:
   contact: {}
   description: |-
-    基于Gin + Vue + Element UI的前后端分离权限管理系统的接口文档
-    KOBH
+    admin Web Backend
+    admin
   license:
     name: MIT
-    url: https://github.com
-  title: Kobh Web Framework
+    url: https://github.com/...
+  title: admin Web Backend
   version: 1.0.0
 paths:
+  /api/v1/all-dict:
+    get:
+      description: 获取全部字典数据
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 获取全部字典数据
+      tags:
+      - 其他
   /api/v1/app-config:
     get:
       description: 获取系统配置信息。此接口不验证权限
@@ -889,6 +835,25 @@ paths:
       summary: 获取验证码
       tags:
       - 登陆
+  /api/v1/check-existence/{username}:
+    get:
+      description: 检查用户存在
+      parameters:
+      - description: username
+        in: path
+        name: username
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 检查用户存在
+      tags:
+      - 用户
   /api/v1/config:
     delete:
       description: 删除配置管理
@@ -950,7 +915,7 @@ paths:
                   - properties:
                       list:
                         items:
-                          $ref: '#/definitions/models.SysApi'
+                          $ref: '#/definitions/models.SysConfig'
                         type: array
                     type: object
               type: object
@@ -1052,141 +1017,6 @@ paths:
       summary: 根据Key获取SysConfig的Service
       tags:
       - 配置管理
-  /api/v1/country:
-    delete:
-      description: 删除国家编码
-      parameters:
-      - description: body
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/dto.TbxCountryDeleteReq'
-      responses:
-        "200":
-          description: '{"code": 200, "message": "删除成功", "data": [...]}'
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - Bearer: []
-      summary: 删除国家编码
-      tags:
-      - 国家编码
-    get:
-      description: 获取国家编码列表
-      parameters:
-      - description: 编码
-        in: query
-        name: code
-        type: string
-      - description: 中文名称
-        in: query
-        name: cName
-        type: string
-      - description: English Name
-        in: query
-        name: eName
-        type: string
-      - description: 页条数
-        in: query
-        name: pageSize
-        type: integer
-      - description: 页码
-        in: query
-        name: pageIndex
-        type: integer
-      responses:
-        "200":
-          description: '{"code": 200, "data": [...]}'
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  allOf:
-                  - $ref: '#/definitions/response.Page'
-                  - properties:
-                      list:
-                        items:
-                          $ref: '#/definitions/models.TbxCountry'
-                        type: array
-                    type: object
-              type: object
-      security:
-      - Bearer: []
-      summary: 获取国家编码列表
-      tags:
-      - 国家编码
-    post:
-      consumes:
-      - application/json
-      description: 创建国家编码
-      parameters:
-      - description: data
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/dto.TbxCountryInsertReq'
-      responses:
-        "200":
-          description: '{"code": 200, "message": "创建成功", "data": code}'
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - Bearer: []
-      summary: 创建国家编码
-      tags:
-      - 国家编码
-  /api/v1/country/{code}:
-    get:
-      description: 获取国家编码
-      parameters:
-      - description: 编码
-        in: path
-        name: code
-        type: string
-      responses:
-        "200":
-          description: '{"code": 200, "data": [...]}'
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/models.TbxCountry'
-              type: object
-      security:
-      - Bearer: []
-      summary: 获取国家编码
-      tags:
-      - 国家编码
-    put:
-      consumes:
-      - application/json
-      description: 修改国家编码
-      parameters:
-      - description: 编码
-        in: path
-        name: code
-        required: true
-        type: string
-      - description: body
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/dto.TbxCountryUpdateReq'
-      responses:
-        "200":
-          description: '{"code": 200, "message": "更新成功", "data": code}'
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - Bearer: []
-      summary: 修改国家编码
-      tags:
-      - 国家编码
   /api/v1/dept:
     delete:
       description: 删除数据
@@ -1619,6 +1449,260 @@ paths:
       summary: 获取个人信息
       tags:
       - 个人中心
+  /api/v1/im/accept-friend-req:
+    put:
+      description: 接受好友请求
+      parameters:
+      - description: 好友请求记录主键
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 用户ID
+        in: query
+        name: toUserId
+        required: true
+        type: integer
+      - description: 即将被添加的好友用户ID
+        in: query
+        name: fromUserId
+        required: true
+        type: integer
+      - description: 接受消息
+        in: query
+        name: handleMsg
+        type: string
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 接受好友请求
+      tags:
+      - 即时通信
+  /api/v1/im/block-friend:
+    post:
+      description: 拉黑好友
+      parameters:
+      - description: 用户ID
+        in: query
+        name: userId
+        required: true
+        type: integer
+      - description: 被拉黑用户ID
+        in: query
+        name: blockUserId
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 拉黑好友
+      tags:
+      - 即时通信
+  /api/v1/im/cancel-block-friend:
+    delete:
+      description: 解除拉黑好友
+      parameters:
+      - description: 用户ID
+        in: query
+        name: userId
+        required: true
+        type: integer
+      - description: 被拉黑用户ID
+        in: query
+        name: blockUserId
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 解除拉黑好友
+      tags:
+      - 即时通信
+  /api/v1/im/delete-friend:
+    delete:
+      description: 删除好友
+      parameters:
+      - description: 用户ID
+        in: query
+        name: userId
+        type: integer
+      - description: 好友用户ID
+        in: query
+        name: friendUserId
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 删除好友
+      tags:
+      - 即时通信
+  /api/v1/im/friend-list:
+    get:
+      description: 获取好友列表
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 获取好友列表
+      tags:
+      - 即时通信
+  /api/v1/im/friend-req:
+    post:
+      description: 创建好友申请记录
+      parameters:
+      - description: 当前用户id
+        in: query
+        name: fromUserId
+        required: true
+        type: integer
+      - description: 要添加的用户id
+        in: query
+        name: toUserId
+        required: true
+        type: integer
+      - description: 添加好友请求消息
+        in: query
+        name: reqMsg
+        type: string
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 创建好友申请记录
+      tags:
+      - 即时通信
+  /api/v1/im/friend-req-list:
+    get:
+      description: 获取好友申请列表
+      parameters:
+      - description: 来源用户ID
+        in: query
+        name: fromUserId
+        type: integer
+      - description: 被添加的用户ID
+        in: query
+        name: toUserId
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 获取好友申请列表
+      tags:
+      - 即时通信
+  /api/v1/im/reject-friend-req:
+    put:
+      description: 拒绝好友请求
+      parameters:
+      - description: 好友请求记录主键
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 用户ID
+        in: query
+        name: toUserId
+        type: integer
+      - description: 被拒绝的好友用户ID
+        in: query
+        name: fromUserId
+        type: integer
+      - description: 拒绝消息
+        in: query
+        name: hanleMsg
+        type: string
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 拒绝好友请求
+      tags:
+      - 即时通信
+  /api/v1/im/update-friend-remark:
+    put:
+      description: 更新好友备注
+      parameters:
+      - description: 好友记录主键
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 用户ID
+        in: query
+        name: userId
+        type: integer
+      - description: 好友用户ID
+        in: query
+        name: friendUserId
+        type: integer
+      - description: 备注
+        in: query
+        name: remark
+        type: string
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 更新好友备注
+      tags:
+      - 即时通信
+  /api/v1/limited-download/{uuid}:
+    get:
+      description: 受限下载
+      parameters:
+      - description: uuid
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: filename
+        in: query
+        name: filename
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            $ref: '#/definitions/response.Response'
+        "503":
+          description: ""
+      security:
+      - Bearer: []
+      summary: 受限下载
+      tags:
+      - 其他
   /api/v1/login:
     post:
       consumes:
@@ -2004,7 +2088,7 @@ paths:
       summary: 更新角色数据权限
       tags:
       - 角色/Role
-  /api/v1/role-status/{id}:
+  /api/v1/role-status:
     put:
       consumes:
       - application/json
@@ -2396,6 +2480,10 @@ paths:
         in: query
         name: operIp
         type: string
+      - description: operName
+        in: query
+        name: opername
+        type: string
       - description: status
         in: query
         name: status
@@ -2612,7 +2700,28 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - Bearer: []
-      summary: 获取个人中心用户
+      summary: 获取个人中心
+      tags:
+      - 个人中心
+    post:
+      consumes:
+      - application/json
+      description: 获取JSON
+      parameters:
+      - description: body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.PassWord'
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 修改个人中心
       tags:
       - 个人中心
   /api/v1/user/pwd/set:
@@ -2637,6 +2746,59 @@ paths:
       summary: 重置密码
       tags:
       - 个人中心
+  /presign-token:
+    post:
+      description: 预签名令牌
+      parameters:
+      - description: data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/middleware.PresignTokenRequest'
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            $ref: '#/definitions/middleware.PresignTokenResponse'
+        "500":
+          description: ""
+      security:
+      - Bearer: []
+      summary: 预签名令牌
+      tags:
+      - 公共接口
+  /public/downloadFile/{pathname}/{filename}:
+    get:
+      description: 下载文件
+      parameters:
+      - description: pathname
+        in: path
+        name: pathname
+        required: true
+        type: string
+      - description: filename
+        in: path
+        name: filename
+        required: true
+        type: string
+      - description: as
+        in: query
+        name: as
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            $ref: '#/definitions/response.Response'
+        "503":
+          description: ""
+      security:
+      - Bearer: []
+      summary: 下载文件
+      tags:
+      - 公共接口
   /server-monitor:
     get:
       description: 获取JSON

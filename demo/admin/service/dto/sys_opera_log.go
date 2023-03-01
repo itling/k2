@@ -44,8 +44,8 @@ type SysOperaLogControl struct {
 	OperIp        string    `json:"operIp" comment:"客户端ip"`
 	OperLocation  string    `json:"operLocation" comment:"访问位置"`
 	OperParam     string    `json:"operParam" comment:"请求参数"`
-	StatusCode    int    	`json:"statusCode" comment:"HTTP代码"`
-	ApiCode       int    	`json:"apiCode" comment:"API代码"`
+	StatusCode    int       `json:"statusCode" comment:"HTTP代码"`
+	ApiCode       int       `json:"apiCode" comment:"API代码"`
 	OperTime      time.Time `json:"operTime" comment:"操作时间"`
 	JsonResult    string    `json:"jsonResult" comment:"返回数据"`
 	Remark        string    `json:"remark" comment:"备注"`

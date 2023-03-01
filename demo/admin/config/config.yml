@@ -18,7 +18,7 @@ settings:
     output: stderr # stdout|stderr|file combine multiple values with '+'
     # labels:  # comma-separated key-value pairs, i.e. "app=example_app,dc=sjc-1"
     # 数据库日志开关
-    log-db: false
+    log-db: true
   jwt:
     # token 密钥，生产环境时及的修改
     secret: admin

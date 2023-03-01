@@ -1,11 +1,10 @@
 package router
 
-
 import (
 	"net/http/pprof"
 	"os"
 
-    jwt "github.com/appleboy/gin-jwt/v2"
+	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 
 	"github.com/kingwel-xie/k2/common"

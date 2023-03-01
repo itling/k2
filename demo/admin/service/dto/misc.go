@@ -11,4 +11,3 @@ type TbxLimitedDownloadReq struct {
 	ContentLength int64     `json:"-"`
 	Reader        io.Reader `json:"-"`
 }
-

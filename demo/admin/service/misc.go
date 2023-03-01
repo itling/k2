@@ -1,10 +1,10 @@
 package service
 
 import (
+	"admin/service/dto"
 	"bytes"
 	k2Error "github.com/kingwel-xie/k2/common/error"
 	"github.com/kingwel-xie/k2/common/service"
-	"admin/service/dto"
 	"os"
 	"sync"
 	"time"
@@ -18,9 +18,9 @@ type TbxMisc struct {
 }
 
 type dataDescriptor struct {
-	ContentType string	// 'application/pdf' ...
-	Data *bytes.Buffer	// buffer to the data
-	Uuid string			// or an uuid pointed to the FileStore
+	ContentType string        // 'application/pdf' ...
+	Data        *bytes.Buffer // buffer to the data
+	Uuid        string        // or an uuid pointed to the FileStore
 }
 
 // LimitedDownload 受限下载
@@ -60,7 +60,7 @@ func AddLimitedDownload(url, contentType string, data *bytes.Buffer, duration ti
 	if ok {
 		delete(uuidMap, url)
 	}
-	uuidMap[url] = dataDescriptor{ ContentType: contentType, Data: data }
+	uuidMap[url] = dataDescriptor{ContentType: contentType, Data: data}
 	lock.Unlock()
 
 	go func() {

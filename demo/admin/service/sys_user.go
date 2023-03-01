@@ -228,7 +228,6 @@ func (e *SysUser) UpdatePwd(id int, oldPassword, newPassword string) error {
 	return nil
 }
 
-
 // UpdateProfile 修改Profile
 func (e *SysUser) UpdateProfile(id int, req *dto.SysUserUpdateProfileReq) error {
 	c := &models.SysUser{}

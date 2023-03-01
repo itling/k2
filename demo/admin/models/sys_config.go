@@ -11,7 +11,7 @@ type SysConfig struct {
 	ConfigValue string `json:"configValue" gorm:"comment:ConfigValue"` //
 	ConfigType  string `json:"configType" gorm:"size:64;comment:ConfigType"`
 	IsFrontend  int    `json:"isFrontend" gorm:"size:64;comment:是否前台"` //
-	Remark      string `json:"remark" gorm:"comment:Remark"`  //
+	Remark      string `json:"remark" gorm:"comment:Remark"`           //
 	models.ControlBy
 	models.ModelTime
 }

@@ -5,7 +5,6 @@ import (
 	"github.com/kingwel-xie/k2/cmd/migrate"
 
 	"admin/entry"
-	_ "admin/migrate/version"
 )
 
 //go:generate swag init --parseDependency --parseDepth=6

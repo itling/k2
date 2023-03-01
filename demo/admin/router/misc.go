@@ -1,10 +1,10 @@
 package router
 
 import (
+	"admin/apis"
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"admin/apis"
 )
 
 func init() {

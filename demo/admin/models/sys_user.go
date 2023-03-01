@@ -24,7 +24,7 @@ type SysUser struct {
 	DeptIds  []int    `json:"deptIds" gorm:"-"`
 	PostIds  []int    `json:"postIds" gorm:"-"`
 	RoleIds  []int    `json:"roleIds" gorm:"-"`
-	Dept     	*SysDept `json:"dept"`
+	Dept     *SysDept `json:"dept"`
 	Role     *SysRole `json:"role"`
 	models.ControlBy
 	models.ModelTime

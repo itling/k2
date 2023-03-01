@@ -91,7 +91,23 @@ func initDB() {
 	_ = db.Transaction(func(tx *gorm.DB) error {
 		tx.DisableForeignKeyConstraintWhenMigrating = true
 		err := tx.Migrator().AutoMigrate(
-			new(models.TbxCountry),
+			new(models.SysApi),
+			new(models.SysConfig),
+			new(models.SysDictType),
+			new(models.SysDictData),
+			new(models.SysMenu),
+			new(models.SysRole),
+			new(models.SysUser),
+			new(models.SysLoginLog),
+			new(models.SysOperaLog),
+			new(models.SysPost),
+			new(models.ImUserFriend),
+			new(models.ImUserFriendRequest),
+			new(models.ImBlack),
+			new(models.ImGroup),
+			new(models.ImGroupRequest),
+			new(models.ImGroupMember),
+			new(models.ImMessage),
 		)
 		if err != nil {
 			logger.Fatalf("cannot migrate DB, %v", err)

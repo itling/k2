@@ -15,10 +15,9 @@ import (
 	"admin/service/dto"
 )
 
-
 var (
 	passwordModificationFailedErr = cerr.New(403, "密码修改失败", "password modification failed")
-	loginFailedErr = cerr.New(403, "登录失败", "login failed")
+	loginFailedErr                = cerr.New(403, "登录失败", "login failed")
 )
 
 type SysUser struct {
@@ -414,7 +413,7 @@ func (e SysUser) GetProfile(c *gin.Context) {
 // @Router /api/v1/getinfo [get]
 // @Security Bearer
 func (e SysUser) GetInfo(c *gin.Context) {
-	req := dto.SysUserById{}
+	//req := dto.SysUserById{}
 	s := service.SysUser{}
 	r := service.SysRole{}
 	err := e.MakeContext(c).

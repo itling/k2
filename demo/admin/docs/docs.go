@@ -11,7 +11,7 @@ import (
 	"github.com/swaggo/swag"
 )
 
-var doc = `{
+var doc=   `{
     "schemes": {{ marshal .Schemes }},
     "swagger": "2.0",
     "info": {
@@ -20,13 +20,35 @@ var doc = `{
         "contact": {},
         "license": {
             "name": "MIT",
-            "url": "https://github.com"
+            "url": "https://github.com/..."
         },
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/v1/all-dict": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "获取全部字典数据",
+                "tags": [
+                    "其他"
+                ],
+                "summary": "获取全部字典数据",
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"data\": [...]}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/app-config": {
             "get": {
                 "description": "获取系统配置信息。此接口不验证权限",
@@ -89,6 +111,37 @@ var doc = `{
                                     }
                                 }
                             ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/check-existence/{username}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "检查用户存在",
+                "tags": [
+                    "用户"
+                ],
+                "summary": "检查用户存在",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "username",
+                        "name": "username",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"data\": [...]}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -166,7 +219,7 @@ var doc = `{
                                                         "list": {
                                                             "type": "array",
                                                             "items": {
-                                                                "$ref": "#/definitions/models.SysApi"
+                                                                "$ref": "#/definitions/models.SysConfig"
                                                             }
                                                         }
                                                     }
@@ -368,235 +421,6 @@ var doc = `{
                                     }
                                 }
                             ]
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/country": {
-            "get": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "description": "获取国家编码列表",
-                "tags": [
-                    "国家编码"
-                ],
-                "summary": "获取国家编码列表",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "编码",
-                        "name": "code",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "中文名称",
-                        "name": "cName",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "English Name",
-                        "name": "eName",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "页条数",
-                        "name": "pageSize",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "页码",
-                        "name": "pageIndex",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "{\"code\": 200, \"data\": [...]}",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "allOf": [
-                                                {
-                                                    "$ref": "#/definitions/response.Page"
-                                                },
-                                                {
-                                                    "type": "object",
-                                                    "properties": {
-                                                        "list": {
-                                                            "type": "array",
-                                                            "items": {
-                                                                "$ref": "#/definitions/models.TbxCountry"
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            ]
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            },
-            "post": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "description": "创建国家编码",
-                "consumes": [
-                    "application/json"
-                ],
-                "tags": [
-                    "国家编码"
-                ],
-                "summary": "创建国家编码",
-                "parameters": [
-                    {
-                        "description": "data",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.TbxCountryInsertReq"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "{\"code\": 200, \"message\": \"创建成功\", \"data\": code}",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "description": "删除国家编码",
-                "tags": [
-                    "国家编码"
-                ],
-                "summary": "删除国家编码",
-                "parameters": [
-                    {
-                        "description": "body",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.TbxCountryDeleteReq"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "{\"code\": 200, \"message\": \"删除成功\", \"data\": [...]}",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/country/{code}": {
-            "get": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "description": "获取国家编码",
-                "tags": [
-                    "国家编码"
-                ],
-                "summary": "获取国家编码",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "编码",
-                        "name": "code",
-                        "in": "path"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "{\"code\": 200, \"data\": [...]}",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/models.TbxCountry"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            },
-            "put": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "description": "修改国家编码",
-                "consumes": [
-                    "application/json"
-                ],
-                "tags": [
-                    "国家编码"
-                ],
-                "summary": "修改国家编码",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "编码",
-                        "name": "code",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "body",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.TbxCountryUpdateReq"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "{\"code\": 200, \"message\": \"更新成功\", \"data\": code}",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -1304,6 +1128,410 @@ var doc = `{
                 }
             }
         },
+        "/api/v1/im/accept-friend-req": {
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "接受好友请求",
+                "tags": [
+                    "即时通信"
+                ],
+                "summary": "接受好友请求",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "好友请求记录主键",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "用户ID",
+                        "name": "toUserId",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "即将被添加的好友用户ID",
+                        "name": "fromUserId",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "接受消息",
+                        "name": "handleMsg",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"data\": [...]}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/im/block-friend": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "拉黑好友",
+                "tags": [
+                    "即时通信"
+                ],
+                "summary": "拉黑好友",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "用户ID",
+                        "name": "userId",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "被拉黑用户ID",
+                        "name": "blockUserId",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"data\": [...]}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/im/cancel-block-friend": {
+            "delete": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "解除拉黑好友",
+                "tags": [
+                    "即时通信"
+                ],
+                "summary": "解除拉黑好友",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "用户ID",
+                        "name": "userId",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "被拉黑用户ID",
+                        "name": "blockUserId",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"data\": [...]}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/im/delete-friend": {
+            "delete": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "删除好友",
+                "tags": [
+                    "即时通信"
+                ],
+                "summary": "删除好友",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "用户ID",
+                        "name": "userId",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "好友用户ID",
+                        "name": "friendUserId",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"data\": [...]}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/im/friend-list": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "获取好友列表",
+                "tags": [
+                    "即时通信"
+                ],
+                "summary": "获取好友列表",
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"data\": [...]}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/im/friend-req": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "创建好友申请记录",
+                "tags": [
+                    "即时通信"
+                ],
+                "summary": "创建好友申请记录",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "当前用户id",
+                        "name": "fromUserId",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "要添加的用户id",
+                        "name": "toUserId",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "添加好友请求消息",
+                        "name": "reqMsg",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"data\": [...]}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/im/friend-req-list": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "获取好友申请列表",
+                "tags": [
+                    "即时通信"
+                ],
+                "summary": "获取好友申请列表",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "来源用户ID",
+                        "name": "fromUserId",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "被添加的用户ID",
+                        "name": "toUserId",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"data\": [...]}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/im/reject-friend-req": {
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "拒绝好友请求",
+                "tags": [
+                    "即时通信"
+                ],
+                "summary": "拒绝好友请求",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "好友请求记录主键",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "用户ID",
+                        "name": "toUserId",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "被拒绝的好友用户ID",
+                        "name": "fromUserId",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "拒绝消息",
+                        "name": "hanleMsg",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"data\": [...]}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/im/update-friend-remark": {
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "更新好友备注",
+                "tags": [
+                    "即时通信"
+                ],
+                "summary": "更新好友备注",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "好友记录主键",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "用户ID",
+                        "name": "userId",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "好友用户ID",
+                        "name": "friendUserId",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "备注",
+                        "name": "remark",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"data\": [...]}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/limited-download/{uuid}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "受限下载",
+                "tags": [
+                    "其他"
+                ],
+                "summary": "受限下载",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "uuid",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "filename",
+                        "name": "filename",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"data\": [...]}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "503": {
+                        "description": ""
+                    }
+                }
+            }
+        },
         "/api/v1/login": {
             "post": {
                 "description": "获取token\nLoginHandler can be used by clients to get a jwt token.\nPayload needs to be json in the form of {\"username\": \"USERNAME\", \"password\": \"PASSWORD\"}.\nReply will be of the form {\"token\": \"TOKEN\"}.\ndev mode：It should be noted that all fields cannot be empty, and a value of 0 can be passed in addition to the account password\n注意：开发模式：需要注意全部字段不能为空，账号密码外可以传入0值",
@@ -1912,7 +2140,7 @@ var doc = `{
                 }
             }
         },
-        "/api/v1/role-status/{id}": {
+        "/api/v1/role-status": {
             "put": {
                 "security": [
                     {
@@ -2535,6 +2763,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "operName",
+                        "name": "opername",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "status",
                         "name": "status",
                         "in": "query"
@@ -2904,7 +3138,41 @@ var doc = `{
                 "tags": [
                     "个人中心"
                 ],
-                "summary": "获取个人中心用户",
+                "summary": "获取个人中心",
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"data\": [...]}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "获取JSON",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "个人中心"
+                ],
+                "summary": "修改个人中心",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.PassWord"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "{\"code\": 200, \"data\": [...]}",
@@ -2947,6 +3215,90 @@ var doc = `{
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
+                    }
+                }
+            }
+        },
+        "/presign-token": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "预签名令牌",
+                "tags": [
+                    "公共接口"
+                ],
+                "summary": "预签名令牌",
+                "parameters": [
+                    {
+                        "description": "data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/middleware.PresignTokenRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"data\": [...]}",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.PresignTokenResponse"
+                        }
+                    },
+                    "500": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/public/downloadFile/{pathname}/{filename}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "下载文件",
+                "tags": [
+                    "公共接口"
+                ],
+                "summary": "下载文件",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "pathname",
+                        "name": "pathname",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "filename",
+                        "name": "filename",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "as",
+                        "name": "as",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"data\": [...]}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "503": {
+                        "description": ""
                     }
                 }
             }
@@ -3370,10 +3722,6 @@ var doc = `{
                         "type": "integer"
                     }
                 },
-                "breadcrumb": {
-                    "description": "是否面包屑",
-                    "type": "string"
-                },
                 "component": {
                     "description": "组件",
                     "type": "string"
@@ -3421,12 +3769,6 @@ var doc = `{
                 "sort": {
                     "description": "排序",
                     "type": "integer"
-                },
-                "sysApi": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.SysApi"
-                    }
                 },
                 "title": {
                     "description": "显示名称",
@@ -3451,10 +3793,6 @@ var doc = `{
                         "type": "integer"
                     }
                 },
-                "breadcrumb": {
-                    "description": "是否面包屑",
-                    "type": "string"
-                },
                 "component": {
                     "description": "组件",
                     "type": "string"
@@ -3502,12 +3840,6 @@ var doc = `{
                 "sort": {
                     "description": "排序",
                     "type": "integer"
-                },
-                "sysApi": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.SysApi"
-                    }
                 },
                 "title": {
                     "description": "显示名称",
@@ -3601,9 +3933,6 @@ var doc = `{
         "dto.SysRoleInsertReq": {
             "type": "object",
             "properties": {
-                "admin": {
-                    "type": "boolean"
-                },
                 "dataScope": {
                     "type": "string"
                 },
@@ -3664,9 +3993,6 @@ var doc = `{
         "dto.SysRoleUpdateReq": {
             "type": "object",
             "properties": {
-                "admin": {
-                    "type": "boolean"
-                },
                 "dataScope": {
                     "type": "string"
                 },
@@ -3813,63 +4139,6 @@ var doc = `{
                 }
             }
         },
-        "dto.TbxCountryDeleteReq": {
-            "type": "object",
-            "properties": {
-                "ids": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                }
-            }
-        },
-        "dto.TbxCountryInsertReq": {
-            "type": "object",
-            "properties": {
-                "cName": {
-                    "type": "string"
-                },
-                "code": {
-                    "type": "string"
-                },
-                "code2": {
-                    "type": "string"
-                },
-                "code3": {
-                    "type": "string"
-                },
-                "eName": {
-                    "type": "string"
-                },
-                "eName2": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.TbxCountryUpdateReq": {
-            "type": "object",
-            "properties": {
-                "cName": {
-                    "type": "string"
-                },
-                "code": {
-                    "type": "string"
-                },
-                "code2": {
-                    "type": "string"
-                },
-                "code3": {
-                    "type": "string"
-                },
-                "eName": {
-                    "type": "string"
-                },
-                "eName2": {
-                    "type": "string"
-                }
-            }
-        },
         "dto.UpdateStatusReq": {
             "type": "object",
             "properties": {
@@ -3918,6 +4187,29 @@ var doc = `{
                 }
             }
         },
+        "middleware.PresignTokenRequest": {
+            "type": "object",
+            "properties": {
+                "directory": {
+                    "type": "string"
+                },
+                "duration": {
+                    "type": "integer"
+                },
+                "filename": {
+                    "type": "string"
+                }
+            }
+        },
+        "middleware.PresignTokenResponse": {
+            "type": "object",
+            "properties": {
+                "token": {},
+                "vendor": {
+                    "type": "string"
+                }
+            }
+        },
         "models.SysApi": {
             "type": "object",
             "properties": {
@@ -3925,7 +4217,7 @@ var doc = `{
                     "type": "string"
                 },
                 "createBy": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "createdAt": {
                     "type": "string"
@@ -3946,7 +4238,7 @@ var doc = `{
                     "type": "string"
                 },
                 "updateBy": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "updatedAt": {
                     "type": "string"
@@ -3969,7 +4261,7 @@ var doc = `{
                     "type": "string"
                 },
                 "createBy": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "createdAt": {
                     "type": "string"
@@ -3984,7 +4276,7 @@ var doc = `{
                     "type": "string"
                 },
                 "updateBy": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "updatedAt": {
                     "type": "string"
@@ -4001,7 +4293,7 @@ var doc = `{
                     }
                 },
                 "createBy": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "createdAt": {
                     "type": "string"
@@ -4048,7 +4340,7 @@ var doc = `{
                     "type": "integer"
                 },
                 "updateBy": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "updatedAt": {
                     "type": "string"
@@ -4067,9 +4359,6 @@ var doc = `{
                         "type": "integer"
                     }
                 },
-                "breadcrumb": {
-                    "type": "string"
-                },
                 "children": {
                     "type": "array",
                     "items": {
@@ -4080,7 +4369,7 @@ var doc = `{
                     "type": "string"
                 },
                 "createBy": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "createdAt": {
                     "type": "string"
@@ -4088,11 +4377,11 @@ var doc = `{
                 "icon": {
                     "type": "string"
                 },
-                "isFrame": {
+                "iconAntd": {
                     "type": "string"
                 },
-                "is_select": {
-                    "type": "boolean"
+                "isFrame": {
+                    "type": "string"
                 },
                 "menuId": {
                     "type": "integer"
@@ -4105,9 +4394,6 @@ var doc = `{
                 },
                 "noCache": {
                     "type": "boolean"
-                },
-                "params": {
-                    "type": "string"
                 },
                 "parentId": {
                     "type": "integer"
@@ -4137,47 +4423,12 @@ var doc = `{
                     "type": "string"
                 },
                 "updateBy": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "updatedAt": {
                     "type": "string"
                 },
                 "visible": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.TbxCountry": {
-            "type": "object",
-            "properties": {
-                "cName": {
-                    "type": "string"
-                },
-                "code": {
-                    "type": "string"
-                },
-                "code2": {
-                    "type": "string"
-                },
-                "code3": {
-                    "type": "string"
-                },
-                "createBy": {
-                    "type": "integer"
-                },
-                "createdAt": {
-                    "type": "string"
-                },
-                "eName": {
-                    "type": "string"
-                },
-                "eName2": {
-                    "type": "string"
-                },
-                "updateBy": {
-                    "type": "integer"
-                },
-                "updatedAt": {
                     "type": "string"
                 }
             }
