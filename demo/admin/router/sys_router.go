@@ -13,7 +13,7 @@ import (
 	"admin/apis"
 	"github.com/kingwel-xie/k2/common/config"
 	"github.com/kingwel-xie/k2/common/middleware"
-	"github.com/kingwel-xie/k2/core/ws"
+	"admin/ws"
 
 	_ "admin/docs"
 )
@@ -71,8 +71,7 @@ func sysSwaggerRouter(r *gin.RouterGroup) {
 func sysCheckRoleRouterInit(r *gin.RouterGroup, authMiddleware *jwt.GinJWTMiddleware) {
 	wss := r.Group("").Use(authMiddleware.MiddlewareFunc())
 	{
-		wss.GET("/ws/:id/:channel", ws.WebsocketManager.WsClient)
-		wss.GET("/wslogout/:id/:channel", ws.WebsocketManager.UnWsClient)
+		wss.GET("/ws", ws.RunSocekt)
 	}
 	info := r.Group("/server-monitor").Use(authMiddleware.MiddlewareFunc())
 	{

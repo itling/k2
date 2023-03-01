@@ -15,6 +15,7 @@ import (
 	appconfig "admin/config"
 	"admin/models"
 	"admin/router"
+	"admin/ws"
 
 	"github.com/kingwel-xie/k2/common"
 	"github.com/kingwel-xie/k2/common/config"
@@ -27,7 +28,6 @@ import (
 	"github.com/kingwel-xie/k2/common/storage"
 	"github.com/kingwel-xie/k2/core/logger"
 	"github.com/kingwel-xie/k2/core/utils"
-	"github.com/kingwel-xie/k2/core/ws"
 )
 
 var (
@@ -68,7 +68,6 @@ func setup() {
 		cronjob.Setup,
 		oss.Setup,
 		sms.Setup,
-		ws.Setup,
 	)
 	//注册监听函数
 	queue := common.Runtime.Queue()
@@ -79,6 +78,7 @@ func setup() {
 	// DEV tool for convenience, we can quickly add/modify database...
 	initDB()
 
+	go ws.MyServer.Start()
 	logger.Info(`starting admin server...`)
 }
 
