@@ -3,7 +3,7 @@ package router
 import (
 	"net/http/pprof"
 	"os"
-
+	"net/http"
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 
@@ -41,6 +41,8 @@ func InitRouter() {
 	if err != nil {
 		logger.Fatalf("JWT Init Error, %s", err.Error())
 	}
+
+	r.StaticFS("/file", http.Dir("./static/file"))
 
 	// 注册debug路由
 	initDebugRouter(r)

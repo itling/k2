@@ -16,3 +16,4 @@ config/settings.b.dev.yml
 go.sum
 /examples/q.bat
 /examples/examples.exe
+demo/admin/static/file
