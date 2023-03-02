@@ -1,7 +1,7 @@
 package ws
 
 import (
-	//"admin/service"
+	"admin/service"
 	"admin/constant"
 	"admin/util"
 	"admin/protocol"
@@ -9,7 +9,7 @@ import (
 	"io/ioutil"
 	"strings"
 	"sync"
-
+	"github.com/kingwel-xie/k2/common"
 	"github.com/gogo/protobuf/proto"
 	"github.com/google/uuid"
 )
@@ -40,11 +40,13 @@ func ConsumerKafkaMsg(data []byte) {
 }
 
 func (s *Server) Start() {
+	imMsgService := service.ImMessageService{}
+	imMsgService.Orm=common.Runtime.GetDb();
 	log.Info("start server...")
 	for {
 		select {
 		case conn := <-s.Register:
-			log.Info("new user login in userId=",conn.UserId)
+			log.Info("nuser login userId=",conn.UserId)
 			s.Clients[conn.UserId] = conn
 			msg := &protocol.Message{
 				From:    "",
@@ -71,7 +73,7 @@ func (s *Server) Start() {
 					// 保存消息只会在存在socket的一个端上进行保存，防止分布式部署后，消息重复问题
 					_, exits := s.Clients[msg.From]
 					if exits {
-						saveMessage(msg)
+						saveMessage(&imMsgService,msg)
 					}
 
 					if msg.MessageType == constant.MESSAGE_TYPE_USER {
@@ -111,7 +113,7 @@ func (s *Server) Start() {
 
 
 // 保存消息，如果是文本消息直接保存，如果是文件，语音等消息，保存文件后，保存对应的文件路径
-func saveMessage(message *protocol.Message) {
+func saveMessage(imMsgService *service.ImMessageService,message *protocol.Message) {
 	// 如果上传的是base64字符串文件，解析文件保存
 	if message.ContentType == 2 {
 		url := uuid.New().String() + ".png"
@@ -126,7 +128,7 @@ func saveMessage(message *protocol.Message) {
 			log.Error("transfer base64 to file error",  dataErr.Error())
 			return
 		}
-		err := ioutil.WriteFile("web/static/file/"+url, dataBuffer, 0666)
+		err := ioutil.WriteFile("static/file/"+url, dataBuffer, 0666)
 		if err != nil {
 			log.Error("write file error",  err.Error())
 			return
@@ -142,7 +144,7 @@ func saveMessage(message *protocol.Message) {
 		}
 		contentType := util.GetContentTypeBySuffix(fileSuffix)
 		url := uuid.New().String() + "." + fileSuffix
-		err := ioutil.WriteFile("web/static/file/"+url, message.File, 0666)
+		err := ioutil.WriteFile("static/file/"+url, message.File, 0666)
 		if err != nil {
 			log.Error("write file error", err.Error())
 			return
@@ -152,5 +154,5 @@ func saveMessage(message *protocol.Message) {
 		message.ContentType = contentType
 	}
 	//todo: save db
-	//service.ImMessageService
+	imMsgService.SaveMessage(*message)
 }

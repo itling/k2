@@ -112,6 +112,38 @@ func (e ImUserFriend) GetFriendPage(c *gin.Context) {
 }
 
 
+// GetMessages
+// @Summary 获取聊天记录
+// @Description 获取聊天记录
+// @Tags 即时通信
+// @Success 200 {object} response.Response "{"code": 200, "data": [...]}"
+// @Router /api/v1/im/message-list [get]
+// @Security Bearer
+func (e ImUserFriend) GetMessages(c *gin.Context) {
+	s := service.ImMessageService{}
+	req := dto.ImMessageRequest{}
+	err := e.MakeContext(c).
+		Bind(&req, binding.Form).
+		MakeService(&s.Service).
+		Errors
+	if err != nil {
+		e.Error(err)
+		return
+	}
+
+	list := make([]dto.ImMessageResponse, 0)
+
+	err = s.GetMessages(&req, &list)
+	if err != nil {
+		e.Error(err)
+		return
+	}
+	e.OK(list,"消息查询成功")
+}
+
+
+
+
 
 // AcceptFriendReq
 // @Summary 接受好友请求

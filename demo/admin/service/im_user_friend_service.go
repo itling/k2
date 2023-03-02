@@ -55,7 +55,7 @@ func (e *ImUserFriendService) GetFriendPage(c *dto.ImUserFriendPageReq, list *[]
 	var err error
 	var data models.ImUserFriend
 
-	err = e.Orm.Model(&data).
+	err = e.Orm.Model(&data).Preload("FriendUser").
 		Scopes(
 			cDto.MakeCondition(c.GetNeedSearch()),
 			cDto.Paginate(c.GetPageSize(), c.GetPageIndex()),

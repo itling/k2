@@ -2,7 +2,7 @@ package dto
 
 import "time"
 
-type MessageResponse struct {
+type ImMessageResponse struct {
 	Id           int       `json:"id" gorm:"primarykey"`
 	FromUserId   int       `json:"fromUserId" gorm:"index"`
 	ToUserId     int       `json:"toUserId" gorm:"index"`

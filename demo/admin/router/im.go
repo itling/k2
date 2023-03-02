@@ -25,5 +25,6 @@ func registerImRouter(v1 *gin.RouterGroup, authMiddleware *jwt.GinJWTMiddleware)
 		r.DELETE("/delete-friend", api.RemoveUserFriend)
 		r.POST("/block-friend", api.BlockUserFriend)
 		r.DELETE("/cancel-block-friend", api.CancelBlockUserFriend)
+		r.GET("/message", api.GetMessages)	
 	}
 }

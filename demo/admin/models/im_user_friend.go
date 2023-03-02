@@ -7,9 +7,10 @@ import (
 
 type ImUserFriend struct {
 	Id           int    `json:"id" gorm:"primarykey"`
-	UserId       int    `json:"userId" gorm:"index;comment:'用户ID'"`
+	UserId       int    `json:"userId" gorm:"column:user_id;index;comment:'用户ID'"`
 	FriendUserId int 	`json:"friendUserId" gorm:"index;comment:'好友ID'"`
 	Remark       string `json:"remark" gorm:"type:varchar(50);comment:'好友备注"`
+	FriendUser  SysUser `json:"friendUser" gorm:"foreignKey:friend_user_id;references:user_id"`
 	models.ModelTime
 }
 

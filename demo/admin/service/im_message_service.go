@@ -17,55 +17,40 @@ type ImMessageService struct {
 
 const NULL_ID int = 0
 
-func (e *ImMessageService) GetMessages(message dto.MessageRequest) ([]dto.MessageResponse, error) {
+func (e *ImMessageService) GetMessages(message *dto.ImMessageRequest, list *[]dto.ImMessageResponse) error {
 	//单聊
 	if message.MessageType == constant.MESSAGE_TYPE_USER {
-		var queryUser *models.SysUser
-		e.Orm.First(&queryUser, "user_id = ?", message.Id)
-
-		if NULL_ID == queryUser.UserId {
-			return nil, errors.New("用户不存在")
-		}
 
 		var friend *models.SysUser
-		e.Orm.First(&friend, "username = ?", message.FriendUsername)
+		e.Orm.First(&friend, "user_id = ?", message.Id)
 		if NULL_ID == friend.UserId {
-			return nil, errors.New("用户不存在")
+			return errors.New("用户不存在")
 		}
 
-		var messages []dto.MessageResponse
+		e.Orm.Raw("SELECT m.id, m.from_user_id, m.to_id, m.content, m.content_type, m.url, m.created_at, u.username AS from_username, u.avatar, to_user.username AS to_username  FROM im_message AS m LEFT JOIN sys_user AS u ON m.from_user_id = u.user_id LEFT JOIN sys_user AS to_user ON m.to_id = to_user.user_id WHERE from_user_id IN (?, ?) AND to_id IN (?, ?) order by m.created_at",
+			e.Identity.UserId, friend.UserId, e.Identity.UserId, friend.UserId).Scan(&list)
 
-		e.Orm.Raw("SELECT m.id, m.from_user_id, m.to_id, m.content, m.content_type, m.url, m.created_at, u.username AS from_username, u.avatar, to_user.username AS to_username  FROM im_messages AS m LEFT JOIN sys_user AS u ON m.from_user_id = u.user_id LEFT JOIN sys_user AS to_user ON m.to_id = to_user.user_id WHERE from_user_id IN (?, ?) AND to_id IN (?, ?)",
-			queryUser.UserId, friend.UserId, queryUser.UserId, friend.UserId).Scan(&messages)
-
-		return messages, nil
+		return nil
 	}
 	//群聊
 	if message.MessageType == constant.MESSAGE_TYPE_GROUP {
-		messages, err := e.fetchGroupMessage(message.Id)
-		if err != nil {
-			return nil, err
-		}
-
-		return messages, nil
+		return e.fetchGroupMessage(message.Id, list)
 	}
 
-	return nil, errors.New("不支持查询类型")
+	return errors.New("不支持查询类型")
 }
 
-func (e *ImMessageService) fetchGroupMessage(groupId int) ([]dto.MessageResponse, error) {
+func (e *ImMessageService) fetchGroupMessage(groupId int, list *[]dto.ImMessageResponse) error {
 	var group models.ImGroup
 	e.Orm.First(&group, "id = ?", groupId)
 	if group.Id <= 0 {
-		return nil, errors.New("群组不存在")
+		return errors.New("群组不存在")
 	}
 
-	var messages []dto.MessageResponse
+	e.Orm.Raw("SELECT m.id, m.from_user_id, m.to_id, m.content, m.content_type, m.url, m.created_at, u.username AS from_username, u.avatar FROM im_message AS m LEFT JOIN sys_user AS u ON m.from_user_id = u.user_id WHERE m.message_type = 2 AND m.to_id = ?",
+		group.Id).Scan(&list)
 
-	e.Orm.Raw("SELECT m.id, m.from_user_id, m.to_id, m.content, m.content_type, m.url, m.created_at, u.username AS from_username, u.avatar FROM im_messages AS m LEFT JOIN sys_user AS u ON m.from_user_id = u.user_id WHERE m.message_type = 2 AND m.to_id = ?",
-		group.Id).Scan(&messages)
-
-	return messages, nil
+	return nil
 }
 
 func (e *ImMessageService) SaveMessage(message protocol.Message) {

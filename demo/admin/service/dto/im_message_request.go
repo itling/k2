@@ -1,11 +1,11 @@
 package dto
 
-type MessageRequest struct {
-	MessageType    int32  `json:"messageType"`
-	Id             int    `json:"id"`
-	FriendUsername string `json:"friendUsername"`
+type ImMessageRequest struct {
+	MessageType    int32  `form:"messageType"`
+	Id             int    `form:"id"` //用户id或群组id
+	FriendUsername string `form:"friendUsername"`
 }
 
-func (m *MessageRequest) GetNeedSearch() interface{} {
+func (m *ImMessageRequest) GetNeedSearch() interface{} {
 	return *m
 }
