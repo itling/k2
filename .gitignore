@@ -17,3 +17,4 @@ go.sum
 /examples/q.bat
 /examples/examples.exe
 demo/admin/static/file
+demo/admin/__debug_bin
